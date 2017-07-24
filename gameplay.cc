@@ -11,37 +11,10 @@
 #include <sstream>
 #include <iostream>
 using namespace std;
-Gameplay::Gameplay(): is_hostile{false}, champion{' '}, pc{nullptr}, curr{0}{
-    //Floor f1;
-    //Floor f2;
-    //Floor f3;
-    //Floor f4;
-    //Floor f5;
-    //v.push_back(Floor());
-    //v.push_back(Floor());
-    //v.push_back(Floor());
-    //v.push_back(Floor());
-    //v.push_back(Floor());
-    for (int i = 0; i < 5; i++) {
-        this->v[i]= new Floor();
-    };
-    
-}
+Gameplay::Gameplay(): is_hostile{false}, champion{' '}, pc{nullptr}, curr{0}, file{""}{}
 
-//Gameplay::Gameplay(string file): is_hostile{false}, champion{' '}, curr{0}{
-//    Floor f1(file,1);
-//    Floor f2(file,2);
-//    Floor f3(file,3);
-//    Floor f4(file,4);
-//    Floor f5(file,5);
+Gameplay::Gameplay(string file): is_hostile{false}, champion{' '}, curr{0}, file{file}{}
 
-//    v.push_back(f1);
-//    v.push_back(f2);
-//    v.push_back(f3);
-//    v.push_back(f4);
-//    v.push_back(f5);
-//}
-//
 
 
 
@@ -73,15 +46,25 @@ void Gameplay::setplayer(){
             throw s;
             break;
     }
-    v[curr]->spawn_player(pc);
-    v[curr]->spawn_potions();
-    v[curr]->spawn_gold();
-    v[curr]->spawn_enemies();
-
+    if(file==""){
+        for (int i = 0; i < 5; i++) {
+            this->v[i]= new Floor(pc);
+        }
+    }else{
+        for (int i = 0; i < 5; i++) {
+            this->v[i]= new Floor(file,i,pc);
+        }
+    }
+    v[curr]->DisplayMap();
 }
 
 int Gameplay::create_game(){
-    cout << "choose a champion" << endl;
+    cout << "Choose a champion:" << endl;
+    cout << "s---shade" <<endl;
+    cout << "d---drow" <<endl;
+    cout << "v---vampire" <<endl;
+    cout << "t---troll" <<endl;
+    cout << "g---goblin" <<endl;
     while(true){
         if (cin >> champion){
             try{
@@ -95,7 +78,6 @@ int Gameplay::create_game(){
             cin.ignore();
         }
     }
-    //displayall("");
 
     string s="";
     string cmd;
@@ -116,14 +98,10 @@ int Gameplay::create_game(){
                         return i;
                         // win the game
                     } else {
+                        ++curr;
                         info = "PC moves to the next floor!";
                         displayall(info);
-                        ++curr;
                         pc->reset();
-                        v[curr]->spawn_player(pc);
-                        v[curr]->spawn_potions();
-                        v[curr]->spawn_gold();
-                        v[curr]->spawn_enemies();
                         continue;
                         // moves to next floor
                     }
@@ -212,28 +190,15 @@ int Gameplay::create_game(){
 }
 
 void Gameplay::displayall(string info){
+    pc->trollAddHp();
     v[curr]->DisplayMap();
-    string player;
-    switch(champion){
-        case 's':
-            player = "Shade";
-        case 'd':
-            player = "Drow";
-        case 'v':
-            player = "Vampire";
-        case 'g':
-            player = "Goblin";
-        case 't':
-            player = "Troll";
-        default:
-            break;
-    }
-    cout << "Race: " << player << " Gold: " << pc->getGold() << endl;
+    cout << "Current floor: " << curr << endl;
+    cout << "Race: " << pc->getType() << " Gold: " << pc->getGold() << endl;
     cout << "Hp: " << pc->getHp() <<endl;
     cout << "Atk: " << pc->getAtk() <<endl;
     cout << "Def: " << pc->getDef() <<endl;
     if(info == "PC is dead!" || info == "Game win!"){
-        info = info + "1-playagain \n2-quit";
+        info = info + "\n1-playagain \n2-quit\n";
     }
     cout <<"Action: " << info<< endl;
 }

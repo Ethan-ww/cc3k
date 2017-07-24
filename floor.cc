@@ -14,7 +14,7 @@
 
 using namespace std;
 
-Floor::Floor() {
+Floor::Floor(Character *pc) {
     //cout << "Default cotr" <<endl;
     ifstream map("floor.txt");
     char ch = 'a';
@@ -148,17 +148,21 @@ Floor::Floor() {
         }
     }
 
+    spawn_player(pc); // generate player
+    spawn_gold();
+    spawn_potions();
+    spawn_enemies();
 }
 
 
 Floor::Floor(string filename, int floorindex,Character* pc) {
-    ifstream map("cc3kfloor.txt");
+    ifstream map(filename);
     char ch = 'a';
     string willneveruse;
-    for (int k = 0; k <= floorindex;k++) {
-    for (int i = 0; i < 25; i++) {
-        getline(map, willneveruse);
-    }
+    for (int k = 0; k < floorindex;k++) {
+        for (int i = 0; i < 25; i++) {
+            getline(map, willneveruse);
+        }
     }
     vector<string> lop = {"RH", "BA", "BD", "PH", "WA", "WD","normal","small","merchant_hoard","dragon_hoard"};
     for (int i = 0; i < height; i++) {
@@ -167,57 +171,77 @@ Floor::Floor(string filename, int floorindex,Character* pc) {
             map.read(&ch,1);
             Cell a = Cell();
             if (ch == '0') {
-                a.setCell(i,j,'P');
+                a.setCell(i,j,'.');
                 Potion* addr = new Potion(lop[0],is_drow); // spawn RH
                 listofpotion.push_back(addr);
+               // cout << 0 << " spawn" << endl;
                 a.set_item(addr);
+                temp.push_back(a);
             }else if (ch == '1') {
-                a.setCell(i,j,'P');
+                a.setCell(i,j,'.');
                 Potion* addr = new Potion(lop[1],is_drow); // spawn BA
                 listofpotion.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+               // cout << 1 << " spawn" << endl;
             }else if (ch == '2') {
-                a.setCell(i,j,'P');
+                a.setCell(i,j,'.');
                 Potion* addr = new Potion(lop[2],is_drow); // spawn BD
                 listofpotion.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+                //cout << 2 << " spawn" << endl;
             }else if (ch == '3') {
-                a.setCell(i,j,'P');
+                a.setCell(i,j,'.');
                 Potion* addr = new Potion(lop[3],is_drow); // spawn PH
                 listofpotion.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+               // cout << 3 << " spawn" << endl;
             }else if (ch == '4') {
-                a.setCell(i,j,'P');
+                a.setCell(i,j,'.');
                 Potion* addr = new Potion(lop[4],is_drow); // spawn WA
                 listofpotion.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+                //cout << 4 << " spawn" << endl;
             }else if (ch == '5') {
-                a.setCell(i,j,'P');
+                a.setCell(i,j,'.');
                 Potion* addr = new Potion(lop[5],is_drow); // spawn WD
                 listofpotion.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+               // cout << 5 << " spawn" << endl;
             }else if (ch == '6') {
-                a.setCell(i,j,'G');
+                a.setCell(i,j,'.');
                 Treasure* addr = new Treasure(lop[6],nullptr); // spawn normal gold
                 listoftreasure.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+                //cout << 6 << " spawn" << endl;
             }else if (ch == '7') {
-                a.setCell(i,j,'G');
+                a.setCell(i,j,'.');
                 Treasure* addr = new Treasure(lop[7],nullptr); // spawn small gold
                 listoftreasure.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+                //cout << 7 << " spawn" << endl;
             }else if (ch == '8') {
-                a.setCell(i,j,'G');
+                a.setCell(i,j,'.');
                 Treasure* addr = new Treasure(lop[8],nullptr); // spawn merchant hoard
                 listoftreasure.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+                //cout << 8 << " spawn" << endl;
             }else if (ch == '9') {
-                a.setCell(i, j, 'G');
+                a.setCell(i, j, '.');
                 Treasure* addr = new Treasure(lop[9],nullptr); // spawn dragon hoard
                 listoftreasure.push_back(addr);
                 a.set_item(addr);
+                temp.push_back(a);
+                //cout << 9 << " spawn" << endl;
             }else if (ch == '@') { // set player
-                a.setCell(i,j,ch);
+                a.setCell(i,j,'.');
                 a.set_enemy(pc);
                 playerX = i;
                 playerY = j;
@@ -308,11 +332,16 @@ Floor::Floor(string filename, int floorindex,Character* pc) {
     // set dragon hoard pointer to dragon
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if (!grid[i][j].getItem()->is_Potion()) {
-                if (grid[i][j].getItem()->getType() == lop[9]) {
-                    for (int k = 0;  k < grid[i][j].neighbours.size(); k++) {
-                        if (grid[i][j].neighbours[k]->getCharacter()->getType() == "dragon") {
-                            grid[i][j].getItem()->setdragon(grid[i][j].neighbours[k]->getCharacter());
+            if(grid[i][j].getItem()!= nullptr){
+                if (!grid[i][j].getItem()->is_Potion()) {
+                    if (grid[i][j].getItem()->getType() == lop[9]) { // lop[9] dragon hoard
+                        for (unsigned int k = 0;  k < grid[i][j].neighbours.size(); k++) { // check neighbours
+                            if (grid[i][j].neighbours[k]->getCharacter() != nullptr) {
+                                if (grid[i][j].neighbours[k]->getCharacter()->getType() == "dragon") {
+                                    grid[i][j].getItem()->setdragon(grid[i][j].neighbours[k]->getCharacter());
+                                }
+
+                            }
                         }
                     }
                 }
@@ -572,7 +601,6 @@ void Floor::move_enemy() {
         }
 
     }
-    cout << "enemy moved" << endl;
 }
 
 
@@ -868,7 +896,6 @@ void Floor::DisplayMap() {
 }
 
 Floor::~Floor() {
-    cout << "dtor" << endl;
     unsigned int x;
     x = listofenmey.size();
     for (int i = 0; i < x; i++) {
@@ -982,26 +1009,26 @@ string Floor::attackplayer(bool is_hostile){
                 Character *nc = playerCell->getNeighbour(i)->getCharacter();
                 if(nc->getType() == "elf"){
                     if(pc->getType() != "drow"){
-                        info = nc->attack(pc);
-                        info += nc->attack(pc);
+                        info = info + nc->attack(pc);
+                        info = info + nc->attack(pc);
                     }else{
-                        info=nc->attack(pc);
+                        info= info + nc->attack(pc);
                     }
                 } else if (nc->getType() == "merchant"){ // enemy is a merchant
                     if(is_hostile){
-                        info = nc->attack(pc);
+                        info = info + nc->attack(pc);
                     }
                 } else{
-                    info = nc->attack(pc);
+                    info = info + nc->attack(pc);
                 }
         }else if(playerCell->getNeighbour(i)->getItem()!=nullptr){
             Item *item = playerCell->getNeighbour(i)->getItem();
             if((!item->is_Potion())){
-                if((item->getdragon()!=nullptr)) info+=item->getdragon()->attack(pc);
+                if((item->getdragon()!=nullptr)) info= info + item->getdragon()->attack(pc);
             }
-    }
+        }
         if(pc->getHp() == 0){
-            return "PC is dead!";
+            return info + "PC is dead!";
         } else {
             return info;
         }

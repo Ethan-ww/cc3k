@@ -48,8 +48,8 @@ class Floor {
 public:
     int playerX;
     int playerY;
-    Floor();
-    Floor(std::string,int,Character*);
+    Floor(Character* pc);
+    Floor(std::string file,int index,Character* pc);
     void set_chamber();
     void spawn_player(Character*);
     void spawn_potions();

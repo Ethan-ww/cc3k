@@ -17,6 +17,7 @@ class Gameplay{
     char champion;
     Character *pc;
     int curr;
+    string file="";
     Floor* v[5];
 public:
     Gameplay();
