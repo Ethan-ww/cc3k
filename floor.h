@@ -49,7 +49,7 @@ public:
     int playerX;
     int playerY;
     Floor();
-    Floor(std::string,int);
+    Floor(std::string,int,Character*);
     void set_chamber();
     void spawn_player(Character*);
     void spawn_potions();
@@ -59,7 +59,7 @@ public:
     void DisplayMap();
     void spawn_gold();
     bool is_valid(int,int);
-    void set_isdrown();
+    void set_isdrown(bool);
     void swap(Cell*,Cell*);
     Cell* getCell(int x, int y);
     //Cell* getPlayer();

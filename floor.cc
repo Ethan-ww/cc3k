@@ -151,49 +151,179 @@ Floor::Floor() {
 }
 
 
-Floor::Floor(string filename, int floorindex) {
-    ifstream map("floor.txt");
+Floor::Floor(string filename, int floorindex,Character* pc) {
+    ifstream map("cc3kfloor.txt");
     char ch = 'a';
+    string willneveruse;
+    for (int k = 0; k <= floorindex;k++) {
+    for (int i = 0; i < 25; i++) {
+        getline(map, willneveruse);
+    }
+    }
+    vector<string> lop = {"RH", "BA", "BD", "PH", "WA", "WD","normal","small","merchant_hoard","dragon_hoard"};
     for (int i = 0; i < height; i++) {
         vector<Cell> temp;
         for (int j = 0; j < width; j++) {
             map.read(&ch,1);
             Cell a = Cell();
             if (ch == '0') {
-                
+                a.setCell(i,j,'P');
+                Potion* addr = new Potion(lop[0],is_drow); // spawn RH
+                listofpotion.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '1') {
-                
+                a.setCell(i,j,'P');
+                Potion* addr = new Potion(lop[1],is_drow); // spawn BA
+                listofpotion.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '2') {
-                
+                a.setCell(i,j,'P');
+                Potion* addr = new Potion(lop[2],is_drow); // spawn BD
+                listofpotion.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '3') {
-                
-            }else if (ch == '3') {
-                
+                a.setCell(i,j,'P');
+                Potion* addr = new Potion(lop[3],is_drow); // spawn PH
+                listofpotion.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '4') {
-                
+                a.setCell(i,j,'P');
+                Potion* addr = new Potion(lop[4],is_drow); // spawn WA
+                listofpotion.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '5') {
-                
+                a.setCell(i,j,'P');
+                Potion* addr = new Potion(lop[5],is_drow); // spawn WD
+                listofpotion.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '6') {
-                
+                a.setCell(i,j,'G');
+                Treasure* addr = new Treasure(lop[6],nullptr); // spawn normal gold
+                listoftreasure.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '7') {
-                
+                a.setCell(i,j,'G');
+                Treasure* addr = new Treasure(lop[7],nullptr); // spawn small gold
+                listoftreasure.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '8') {
-                
+                a.setCell(i,j,'G');
+                Treasure* addr = new Treasure(lop[8],nullptr); // spawn merchant hoard
+                listoftreasure.push_back(addr);
+                a.set_item(addr);
             }else if (ch == '9') {
-                
-            }else {
+                a.setCell(i, j, 'G');
+                Treasure* addr = new Treasure(lop[9],nullptr); // spawn dragon hoard
+                listoftreasure.push_back(addr);
+                a.set_item(addr);
+            }else if (ch == '@') { // set player
                 a.setCell(i,j,ch);
+                a.set_enemy(pc);
+                playerX = i;
+                playerY = j;
+                temp.push_back(a);
+            }else if (ch == '\\') { // set stair
+                a.setCell(i, j, ch);
+                temp.push_back(a);
+            }else if (ch == 'H') { // set human
+                a.setCell(i, j, '.');
+                Human* addr = new Human();
+                listofenmey.push_back(addr);
+                a.set_enemy(addr);
+                temp.push_back(a);
+            }else if (ch == 'W') { // set dwarf
+                a.setCell(i, j, '.');
+                Dwarf* addr = new Dwarf();
+                listofenmey.push_back(addr);
+                a.set_enemy(addr);
+                temp.push_back(a);
+            }else if (ch == 'E') { // set elf
+                a.setCell(i, j, '.');
+                Elf* addr = new Elf();
+                listofenmey.push_back(addr);
+                a.set_enemy(addr);
+                temp.push_back(a);
+            }else if (ch == 'O') { // set orc
+                a.setCell(i, j, '.');
+                Orcs* addr = new Orcs();
+                listofenmey.push_back(addr);
+                a.set_enemy(addr);
+                temp.push_back(a);
+            }else if (ch == 'M') { // set merchant
+                a.setCell(i, j, '.');
+                Merchant* addr = new Merchant();
+                listofenmey.push_back(addr);
+                a.set_enemy(addr);
+                temp.push_back(a);
+            }else if (ch == 'D') { // set dragon
+                a.setCell(i, j, '.');
+                Dragon* addr = new Dragon();
+                listofenmey.push_back(addr);
+                a.set_enemy(addr);
+                temp.push_back(a);
+            }else if (ch == 'L') { // set halfing
+                a.setCell(i, j, '.');
+                Halfling* addr = new Halfling();
+                listofenmey.push_back(addr);
+                a.set_enemy(addr);
+                temp.push_back(a);
+            }else { // set others
+                a.setCell(i, j, ch);
                 temp.push_back(a);
             }
         }
         
         grid.push_back(temp);
     }
-    
+    // set neighbour
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j <  width; j++) {
+            if (is_valid(i-1, j-1)) {
+                grid[i][j].neighbours.push_back(&(grid[i-1][j-1]));
+                grid[i][j].numberofneighbours++;
+            }if(is_valid(i, j-1)) {
+                grid[i][j].neighbours.push_back(&(grid[i][j-1]));
+                grid[i][j].numberofneighbours++;
+            }if(is_valid(i+1, j-1)) {
+                grid[i][j].neighbours.push_back(&(grid[i+1][j-1]));
+                grid[i][j].numberofneighbours++;
+            }if(is_valid(i-1, j)) {
+                grid[i][j].neighbours.push_back(&(grid[i-1][j]));
+                grid[i][j].numberofneighbours++;
+            }if(is_valid(i+1, j)) {
+                grid[i][j].neighbours.push_back(&(grid[i+1][j]));
+                grid[i][j].numberofneighbours++;
+            }if(is_valid(i-1, j+1)) {
+                grid[i][j].neighbours.push_back(&(grid[i-1][j+1]));
+                grid[i][j].numberofneighbours++;
+            }if(is_valid(i, j+1)) {
+                grid[i][j].neighbours.push_back(&(grid[i][j+1]));
+                grid[i][j].numberofneighbours++;
+            }if(is_valid(i+1, j+1)) {
+                grid[i][j].neighbours.push_back(&(grid[i+1][j+1]));
+                grid[i][j].numberofneighbours++;
+            }
+        }
+    }
+    // set dragon hoard pointer to dragon
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (!grid[i][j].getItem()->is_Potion()) {
+                if (grid[i][j].getItem()->getType() == lop[9]) {
+                    for (int k = 0;  k < grid[i][j].neighbours.size(); k++) {
+                        if (grid[i][j].neighbours[k]->getCharacter()->getType() == "dragon") {
+                            grid[i][j].getItem()->setdragon(grid[i][j].neighbours[k]->getCharacter());
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
-void Floor::set_isdrown(){
-    
+
+void Floor::set_isdrown(bool is){
+    this->is_drow = is;
 }
 
 bool Floor::is_valid(int x, int y) {

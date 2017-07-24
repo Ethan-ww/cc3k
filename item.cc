@@ -10,3 +10,6 @@
 
 Item::Item(string type): type{type}{}
 Item::~Item(){}
+string Item::getType() const{
+    return type;
+}

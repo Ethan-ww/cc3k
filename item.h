@@ -23,6 +23,7 @@ public:
     virtual Character *getdragon(){
         return nullptr;
     }
+    string getType() const;
     virtual void setdragon(Character *d) {};
     virtual string effect(Character *c) = 0;
     virtual ~Item();

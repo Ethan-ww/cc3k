@@ -53,6 +53,7 @@ void Gameplay::setplayer(){
         }
         case 'd':{
             pc=new Drow();
+            v[curr]->set_isdrown(true);
             break;
         }
         case 'v':{
@@ -141,12 +142,12 @@ int Gameplay::create_game(){
                 
             } else{
                 istringstream ss{cmd};
-                if(!(ss >> c)){
-                    cin.clear();
-                    cin.ignore();
+                if(cmd.length()!=1){
                     continue;
                 }
-                switch (cmd[0]) {
+                
+                ss >>c;
+                switch (c) {
                     case 'u': // use potion
                         cin >> cmd; // input direction
                         info = v[curr]->usepotion(cmd);
