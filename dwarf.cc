@@ -46,3 +46,4 @@ string Dwarf::attack(Character *pc){
 }
 
 Dwarf::~Dwarf(){}
+

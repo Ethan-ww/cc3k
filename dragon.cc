@@ -41,3 +41,5 @@ string Dragon::attack(Character *pc){
 }
 
 Dragon::~Dragon(){}
+
+

@@ -46,3 +46,4 @@ string Elf::attack(Character *pc){
 }
 
 Elf::~Elf(){}
+

@@ -853,7 +853,7 @@ string Floor::move_player(string dir){
         }
 
     }
-    return "false";
+    return "Cannot move there!";
 }
 
 
@@ -898,15 +898,15 @@ void Floor::DisplayMap() {
 Floor::~Floor() {
     unsigned int x;
     x = listofenmey.size();
-    for (int i = 0; i < x; i++) {
+    for (unsigned int i = 0; i < x; i++) {
         delete listofenmey[i];
     }
     x = listoftreasure.size();
-    for (int i = 0;i < x; i++) {
+    for (unsigned int i = 0;i < x; i++) {
         delete listoftreasure[i];
     }
     x = listofpotion.size();
-    for (int i = 0; i < x; i++) {
+    for (unsigned int i = 0; i < x; i++) {
         delete listofpotion[i];
     }
 }

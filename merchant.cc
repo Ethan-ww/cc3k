@@ -41,3 +41,4 @@ string Merchant::attack(Character *pc){
 }
 
 Merchant::~Merchant(){}
+

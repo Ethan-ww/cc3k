@@ -47,3 +47,4 @@ void Goblin::reset(){
 }
 
 Goblin::~Goblin(){}
+

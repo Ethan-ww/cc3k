@@ -110,7 +110,7 @@ int Gameplay::create_game(){
                 if(mode){
                     v[curr]->move_enemy();
                 }
-                info = v[curr]->attackplayer(is_hostile); // enemys around attack player
+                info += v[curr]->attackplayer(is_hostile); // enemys around attack player
                 if(pc->getHp()==0){
                     displayall("PC is dead!");
                     cin >> i;
@@ -172,13 +172,13 @@ int Gameplay::create_game(){
                             info = "Change to normal mode";
                         }
                         displayall(info);
+                        break;
                     case 'r':
                         return 1;
                     case 'q':
                         return 2;
                     default:
-                        cin.clear();
-                        cin.ignore();
+                        break;
                 }
             }
         } else{
@@ -192,7 +192,7 @@ int Gameplay::create_game(){
 void Gameplay::displayall(string info){
     pc->trollAddHp();
     v[curr]->DisplayMap();
-    cout << "Current floor: " << curr << endl;
+    cout << "Current floor: " << curr+1 << endl;
     cout << "Race: " << pc->getType() << " Gold: " << pc->getGold() << endl;
     cout << "Hp: " << pc->getHp() <<endl;
     cout << "Atk: " << pc->getAtk() <<endl;
