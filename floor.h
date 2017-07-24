@@ -59,6 +59,7 @@ public:
     void DisplayMap();
     void spawn_gold();
     bool is_valid(int,int);
+    void set_isdrown();
     void swap(Cell*,Cell*);
     Cell* getCell(int x, int y);
     //Cell* getPlayer();

@@ -159,13 +159,41 @@ Floor::Floor(string filename, int floorindex) {
         for (int j = 0; j < width; j++) {
             map.read(&ch,1);
             Cell a = Cell();
-            a.setCell(i,j,ch);
-            temp.push_back(a);
-            //cout << a.display;
+            if (ch == '0') {
+                
+            }else if (ch == '1') {
+                
+            }else if (ch == '2') {
+                
+            }else if (ch == '3') {
+                
+            }else if (ch == '3') {
+                
+            }else if (ch == '4') {
+                
+            }else if (ch == '5') {
+                
+            }else if (ch == '6') {
+                
+            }else if (ch == '7') {
+                
+            }else if (ch == '8') {
+                
+            }else if (ch == '9') {
+                
+            }else {
+                a.setCell(i,j,ch);
+                temp.push_back(a);
+            }
         }
-        //cout << endl;
+        
         grid.push_back(temp);
     }
+    
+}
+
+void Floor::set_isdrown(){
+    
 }
 
 bool Floor::is_valid(int x, int y) {
