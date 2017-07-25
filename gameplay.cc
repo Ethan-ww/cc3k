@@ -26,7 +26,6 @@ void Gameplay::setplayer(){
         }
         case 'd':{
             pc=new Drow();
-            v[curr]->set_isdrown(true);
             break;
         }
         case 'v':{
@@ -54,6 +53,9 @@ void Gameplay::setplayer(){
         for (int i = 0; i < 5; i++) {
             this->v[i]= new Floor(file,i,pc);
         }
+    }
+    if(champion=='d'){
+        v[curr]->set_isdrow(true);
     }
     v[curr]->DisplayMap();
 }
@@ -190,17 +192,26 @@ int Gameplay::create_game(){
 }
 
 void Gameplay::displayall(string info){
-    pc->trollAddHp();
+    if(pc->getHp()!=0) pc->trollAddHp();
     v[curr]->DisplayMap();
     cout << "Current floor: " << curr+1 << endl;
     cout << "Race: " << pc->getType() << " Gold: " << pc->getGold() << endl;
     cout << "Hp: " << pc->getHp() <<endl;
     cout << "Atk: " << pc->getAtk() <<endl;
     cout << "Def: " << pc->getDef() <<endl;
+    cout << "Action: " << info<< endl;
     if(info == "PC is dead!" || info == "Game win!"){
-        info = info + "\n1-playagain \n2-quit\n";
+        int score=0;
+        if(champion=='s'){
+            score=pc->getGold()*1.5;
+        }else{
+            score=pc->getGold();
+        }
+        cout << "Your final socre: " << score << endl;
+        cout << "Enter your choice" << endl;
+        cout << "1---Play again" << endl;
+        cout << "2---Quit" << endl;
     }
-    cout <<"Action: " << info<< endl;
 }
 
 Gameplay::~Gameplay(){

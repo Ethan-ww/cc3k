@@ -351,7 +351,7 @@ Floor::Floor(string filename, int floorindex,Character* pc) {
 }
 
 
-void Floor::set_isdrown(bool is){
+void Floor::set_isdrow(bool is){
     this->is_drow = is;
 }
 
@@ -576,10 +576,11 @@ void Floor::move_enemy() {
     for (int i = 0;i < height; i++) {
         for (int j = 0; j < width; j++) {
             if(grid[i][j].getCharacter()!=nullptr){
-                if (grid[i][j].getCharacter()->isEnemy() && grid[i][j].getCharacter()->getType()!="dragon") {
+                Character *ec=grid[i][j].getCharacter();
+                if (ec->isEnemy() && ec->getType()!="dragon") {
                     bool is_moved = false;
                     for (unsigned int k = 0; k < temp.size(); k++) {
-                        if (grid[i][j].getCharacter() == temp[i]) {
+                        if (ec == temp[k]) {
                             is_moved = true;
                         }
                     }
@@ -590,7 +591,6 @@ void Floor::move_enemy() {
                                grid[i][j].neighbours[pos]->getItem()!= nullptr) {
                             pos = rand() % grid[i][j].neighbours.size();
                         }
-                        Character *ec=grid[i][j].getCharacter();
                         temp.push_back(ec);
                         grid[i][j].neighbours[pos]->set_enemy(ec);
                         grid[i][j].set_enemy(nullptr);
@@ -613,6 +613,7 @@ void Floor::swap(Cell* newcell, Cell* oldcell) { //swap character pointer
 
 
 string Floor::move_player(string dir){
+    //cout << "Player x, y: " << playerX << ", " <<playerY <<endl;
     if (dir == "no") {
         if (grid[playerX-1][playerY].getCharacter() == nullptr &&
             grid[playerX-1][playerY].getItem() == nullptr) {
@@ -621,7 +622,7 @@ string Floor::move_player(string dir){
                 grid[playerX-1][playerY].getDisplay() == '+') {
                 swap(&grid[playerX-1][playerY],&grid[playerX][playerY]);
                 playerX--;
-                return "PC move north.";
+                return "PC move north. ";
             }
             if (grid[playerX-1][playerY].getDisplay() == '\\') {
                 return "true";
@@ -637,7 +638,7 @@ string Floor::move_player(string dir){
                 }else{
                     swap(&grid[playerX-1][playerY],&grid[playerX][playerY]);
                     playerX--;
-                    return "PC move north.";
+                    return "PC move north. ";
                 }
             }
         }
@@ -649,7 +650,7 @@ string Floor::move_player(string dir){
                 grid[playerX+1][playerY].getDisplay() == '+') {
                 swap(&grid[playerX+1][playerY],&grid[playerX][playerY]);
                 playerX++;
-                return "PC move south.";
+                return "PC move south. ";
             }
             if (grid[playerX+1][playerY].getDisplay() == '\\') {
                 return "true";
@@ -661,11 +662,11 @@ string Floor::move_player(string dir){
                     grid[playerX+1][playerY].set_item(nullptr);
                     swap(&grid[playerX+1][playerY],&grid[playerX][playerY]);
                     playerX++;
-                    return "PC move south.";
+                    return "PC move south. ";
                 }else{
                     swap(&grid[playerX+1][playerY],&grid[playerX][playerY]);
                     playerX++;
-                    return "PC move south.";
+                    return "PC move south. ";
                 }
             }
         }
@@ -678,7 +679,7 @@ string Floor::move_player(string dir){
                 grid[playerX][playerY+1].getDisplay() == '+') {
                 swap(&grid[playerX][playerY+1],&grid[playerX][playerY]);
                 playerY++;
-                return "PC move east.";
+                return "PC move east. ";
             }
             if (grid[playerX][playerY+1].getDisplay() == '\\') {
                 return "true";
@@ -690,11 +691,11 @@ string Floor::move_player(string dir){
                     grid[playerX][playerY+1].set_item(nullptr);
                     swap(&grid[playerX][playerY+1],&grid[playerX][playerY]);
                     playerY++;
-                    return "PC move east.";
+                    return "PC move east. ";
                 }else{
                     swap(&grid[playerX][playerY+1],&grid[playerX][playerY]);
                     playerY++;
-                    return "PC move east.";
+                    return "PC move east. ";
                 }
             }
         }
@@ -707,7 +708,7 @@ string Floor::move_player(string dir){
                 grid[playerX][playerY-1].getDisplay() == '+') {
                 swap(&grid[playerX][playerY-1],&grid[playerX][playerY]);
                 playerY--;
-                return "PC move west.";
+                return "PC move west. ";
             }
             if (grid[playerX][playerY-1].getDisplay() == '\\') {
                 return "true";
@@ -719,11 +720,11 @@ string Floor::move_player(string dir){
                     grid[playerX][playerY-1].set_item(nullptr);
                     swap(&grid[playerX][playerY-1],&grid[playerX][playerY]);
                     playerY--;
-                    return "PC move west.";
+                    return "PC move west. ";
                 }else{
                     swap(&grid[playerX][playerY-1],&grid[playerX][playerY]);
                     playerY--;
-                    return "PC move west.";
+                    return "PC move west. ";
                 }
             }
         }
@@ -736,7 +737,7 @@ string Floor::move_player(string dir){
                 swap(&grid[playerX-1][playerY+1],&grid[playerX][playerY]);
                 playerY++;
                 playerX--;
-                return "PC move northeast.";
+                return "PC move northeast. ";
             }
             if (grid[playerX-1][playerY+1].getDisplay() == '\\') {
                 return "true";
@@ -749,12 +750,12 @@ string Floor::move_player(string dir){
                     swap(&grid[playerX-1][playerY+1],&grid[playerX][playerY]);
                     playerY++;
                     playerX--;
-                    return "PC move northeast.";
+                    return "PC move northeast. ";
                 }else{
                     swap(&grid[playerX-1][playerY+1],&grid[playerX][playerY]);
                     playerY++;
                     playerX--;
-                    return "PC move northeast.";
+                    return "PC move northeast. ";
                 }
             }
         }
@@ -767,7 +768,7 @@ string Floor::move_player(string dir){
                 swap(&grid[playerX-1][playerY-1],&grid[playerX][playerY]);
                 playerY--;
                 playerX--;
-                return "PC move northwest.";
+                return "PC move northwest. ";
             }
             if (grid[playerX-1][playerY-1].getDisplay() == '\\') {
                 return "true";
@@ -780,12 +781,12 @@ string Floor::move_player(string dir){
                     swap(&grid[playerX-1][playerY-1],&grid[playerX][playerY]);
                     playerY--;
                     playerX--;
-                    return "PC move northwest.";
+                    return "PC move northwest. ";
                 }else{
                     swap(&grid[playerX-1][playerY-1],&grid[playerX][playerY]);
                     playerY--;
                     playerX--;
-                    return "PC move northwest.";
+                    return "PC move northwest. ";
                 }
             }
         }
@@ -798,7 +799,7 @@ string Floor::move_player(string dir){
                 swap(&grid[playerX+1][playerY+1],&grid[playerX][playerY]);
                 playerY++;
                 playerX++;
-                return "PC move southeast.";
+                return "PC move southeast. ";
             }
             if (grid[playerX+1][playerY+1].getDisplay() == '\\') {
                 return "true";
@@ -811,12 +812,12 @@ string Floor::move_player(string dir){
                     swap(&grid[playerX-1][playerY+1],&grid[playerX][playerY]);
                     playerY++;
                     playerX++;
-                    return "PC move southeast.";
+                    return "PC move southeast. ";
                 }else{
                     swap(&grid[playerX+1][playerY+1],&grid[playerX][playerY]);
                     playerY++;
                     playerX++;
-                    return "PC move southeast.";
+                    return "PC move southeast. ";
                 }
             }
         }
@@ -829,7 +830,7 @@ string Floor::move_player(string dir){
                 swap(&grid[playerX+1][playerY-1],&grid[playerX][playerY]);
                 playerY--;
                 playerX++;
-                return "PC move southwest.";
+                return "PC move southwest. ";
             }
             if (grid[playerX+1][playerY-1].getDisplay() == '\\') {
                 return "true";
@@ -842,18 +843,18 @@ string Floor::move_player(string dir){
                     swap(&grid[playerX-1][playerY-1],&grid[playerX][playerY]);
                     playerY--;
                     playerX++;
-                    return "PC move southwest.";
+                    return "PC move southwest. ";
                 }else{
                     swap(&grid[playerX+1][playerY-1],&grid[playerX][playerY]);
                     playerY--;
                     playerX++;
-                    return "PC move southwest.";
+                    return "PC move southwest. ";
                 }
             }
         }
 
     }
-    return "Cannot move there!";
+    return "Cannot move there! ";
 }
 
 
@@ -1006,7 +1007,8 @@ string Floor::attackplayer(bool is_hostile){
     int len = playerCell->numberofneighbours;
     for (int i = 0; i < len; i++){
         if(playerCell->getNeighbour(i)->getCharacter()!=nullptr){ // find the enemies
-                Character *nc = playerCell->getNeighbour(i)->getCharacter();
+            Character *nc = playerCell->getNeighbour(i)->getCharacter();
+            //cout << "Neighbour enemy: "<< i <<  nc->getType() <<endl;
                 if(nc->getType() == "elf"){
                     if(pc->getType() != "drow"){
                         info = info + nc->attack(pc);
@@ -1029,8 +1031,6 @@ string Floor::attackplayer(bool is_hostile){
         }
         if(pc->getHp() == 0){
             return info + "PC is dead!";
-        } else {
-            return info;
         }
     }
     return info;
