@@ -10,10 +10,15 @@
 #include <ctype.h>
 #include <sstream>
 #include <iostream>
+#include "conio.h"
 using namespace std;
-Gameplay::Gameplay(): is_hostile{false}, champion{' '}, pc{nullptr}, curr{0}, file{""}{}
+Gameplay::Gameplay(): is_hostile{false}, champion{' '}, pc{nullptr}, curr{0}, file{""}{
+    //system("stty raw");
+}
 
-Gameplay::Gameplay(string file): is_hostile{false}, champion{' '}, curr{0}, file{file}{}
+Gameplay::Gameplay(string file): is_hostile{false}, champion{' '}, curr{0}, file{file}{
+    //system("stty raw");
+}
 
 
 
@@ -45,18 +50,20 @@ void Gameplay::setplayer(){
             throw s;
             break;
     }
+
     if(file==""){
         for (int i = 0; i < 5; i++) {
-            this->v[i]= new Floor(pc);
+            v[curr]= new Floor(pc);
         }
     }else{
         for (int i = 0; i < 5; i++) {
-            this->v[i]= new Floor(file,i,pc);
+            v[curr]= new Floor(file,i,pc);
         }
     }
     if(champion=='d'){
         v[curr]->set_isdrow(true);
     }
+
     v[curr]->DisplayMap();
 }
 
@@ -67,32 +74,53 @@ int Gameplay::create_game(){
     cout << "v---vampire" <<endl;
     cout << "t---troll" <<endl;
     cout << "g---goblin" <<endl;
+    
     while(true){
-        if (cin >> champion){
-            try{
-                setplayer();
-            } catch(string s){
-                cout << s << endl;
-            }
-            break;
-        } else {
-            cin.clear();
-            cin.ignore();
+        champion=my_getch();
+        cout << endl;
+        try{
+            setplayer();
+        } catch(string s){
+            cout << s << endl;
         }
+        break;
+
     }
 
+    
     string s="";
-    string cmd;
+    char cmd;
     bool mode = true; // true means normal mode, flase otherwise
-    char c;
     int i = 0;
     while(true){
         string info = "";
-        if(cin >> cmd){
-            if(cmd == "no" || cmd == "so" || cmd == "ea" || cmd == "we" || cmd == "ne" ||
-               cmd == "nw" || cmd == "se" || cmd == "sw"){
+        
+        cmd=my_getch();
+        cout << endl;
+            if(cmd == 'w' || cmd == 'a' || cmd == 's' || cmd == 'd'){ // w: no/s: so/a: we/d: ea
                 // move player
-                info=v[curr]->move_player(cmd);
+                switch(cmd){
+                    case 'w':{
+                        info=v[curr]->move_player("no");
+                        break;
+                    }
+                    case 'a':{
+                        info=v[curr]->move_player("we");
+                        break;
+
+                    }
+                    case 's':{
+                        info=v[curr]->move_player("so");
+                        break;
+
+                    }
+                    case 'd':{
+                        info=v[curr]->move_player("ea");
+                        break;
+                    }
+                    default:
+                        break;
+                }
                 if( info == "true"){ // already move here
                     if(curr == 4){
                         displayall("Game win!");
@@ -121,16 +149,34 @@ int Gameplay::create_game(){
                 displayall(info);
                 
             } else{
-                istringstream ss{cmd};
-                if(cmd.length()!=1){
-                    continue;
-                }
-                
-                ss >>c;
-                switch (c) {
-                    case 'u': // use potion
-                        cin >> cmd; // input direction
-                        info = v[curr]->usepotion(cmd);
+                switch (cmd) {
+                    case 'j': // use potion
+                        cmd=my_getch();
+                        cout << endl;
+                        switch(cmd){
+                            case 'w':{
+                                info = v[curr]->usepotion("no");
+                                break;
+                            }
+                            case 'a':{
+                                info = v[curr]->usepotion("we");
+                                break;
+                                
+                            }
+                            case 's':{
+                                info = v[curr]->usepotion("so");
+                                break;
+                                
+                            }
+                            case 'd':{
+                                info = v[curr]->usepotion("ea");
+                                break;
+                            }
+                            default:
+                                break;
+                        }
+
+
                         // info store the information of using potion
                         if(pc->getHp()==0){
                             displayall("PC is dead!");
@@ -150,9 +196,32 @@ int Gameplay::create_game(){
                         }
                         displayall(info);
                         break;
-                    case 'a':
-                        cin >> cmd;
-                        info = v[curr]->attackenemy(cmd,is_hostile);
+                    case 'k':
+                        cmd=my_getch();
+                        cout << endl;
+                        switch(cmd){
+                            case 'w':{
+                                info = v[curr]->attackenemy("no",is_hostile);
+                                break;
+                            }
+                            case 'a':{
+                                info = v[curr]->attackenemy("we",is_hostile);
+                                break;
+                                
+                            }
+                            case 's':{
+                                info = v[curr]->attackenemy("so",is_hostile);
+                                break;
+                                
+                            }
+                            case 'd':{
+                                info = v[curr]->attackenemy("ea",is_hostile);
+                                break;
+                            }
+                            default:
+                                break;
+                        }
+                        //info = v[curr]->attackenemy(cmd,is_hostile);
                         info += v[curr]->attackplayer(is_hostile);
                         if(pc->getHp()==0){
                             displayall("PC is dead!");
@@ -183,11 +252,6 @@ int Gameplay::create_game(){
                         break;
                 }
             }
-        } else{
-            cin.clear();
-            cin.ignore();
-            continue;
-        }
     }
 }
 
@@ -215,10 +279,11 @@ void Gameplay::displayall(string info){
 }
 
 Gameplay::~Gameplay(){
-    //cout << "Game dtor" << endl;
     delete pc;
+    pc=nullptr;
     for (int i = 0; i < 5; i++) {
         delete this->v[i];
+        this->v[i]=nullptr;
     }
 }
 //consider player enemy movement after every round
