@@ -552,7 +552,7 @@ void Floor::spawn_gold() {
                 dpos =rand() % grid[posx][posy].numberofneighbours;
             }
             grid[posx][posy].getNeighbour(dpos)->set_enemy(d); // set dragon
-            
+            //cout << "Coordinate: "<< grid[posx][posy].getNeighbour(dpos)->getCharacter()->getType() << posx << ", " << posy <<endl;
         }else if (x == 6 || x == 7) {
             Treasure* a = new Treasure("small",nullptr);
             listoftreasure.push_back(a);
@@ -569,6 +569,7 @@ void Floor::spawn_gold() {
         }
         
     }
+    //cout << "Number of dragon: " << listofenmey.size() << endl;
 }
 
 void Floor::move_enemy() {
@@ -882,6 +883,8 @@ void Floor::DisplayMap() {
                     cout << 'D';
                 }else if(s=="halfling"){
                     cout << 'L';
+                }else{
+                    cout << "LOL";
                 }
             }else if(grid[i][j].getItem()!=nullptr){ // has a item
                 if(grid[i][j].getItem()->is_Potion()){
@@ -946,8 +949,10 @@ string Floor::usepotion(string dir){
             player = grid[playerX][playerY].getCharacter();
             info=p->effect(player);
         } else {
-            throw "That is not a potion";
+            return "That is not a potion. ";
         }
+    }else{
+        return "There is no potion. ";
     }
     n->set_item(nullptr);
     if(player->getHp() == 0){//player die by using poison
@@ -964,7 +969,7 @@ string Floor::attackenemy(string dir, bool& is_hostile){
     if(c->getCharacter()!=nullptr){
         nc=c->getCharacter();
     }else{
-        return "No player there!"; // no enemy? stop here
+        return "No enemy there!"; // no enemy? stop here
     }
     
     if(nc->getType() == "merchant"){

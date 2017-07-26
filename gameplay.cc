@@ -53,11 +53,11 @@ void Gameplay::setplayer(){
 
     if(file==""){
         for (int i = 0; i < 5; i++) {
-            v[curr]= new Floor(pc);
+            v[i]= new Floor(pc);
         }
     }else{
         for (int i = 0; i < 5; i++) {
-            v[curr]= new Floor(file,i,pc);
+            v[i]= new Floor(file,i,pc);
         }
     }
     if(champion=='d'){
@@ -124,8 +124,13 @@ int Gameplay::create_game(){
                 if( info == "true"){ // already move here
                     if(curr == 4){
                         displayall("Game win!");
-                        cin >> i;
-                        return i;
+                        i=my_getch();
+                        cout << endl;
+                        if(i==1){
+                            return 1;
+                        }else{
+                            return 2;
+                        }
                         // win the game
                     } else {
                         ++curr;
@@ -143,8 +148,13 @@ int Gameplay::create_game(){
                 info += v[curr]->attackplayer(is_hostile); // enemys around attack player
                 if(pc->getHp()==0){
                     displayall("PC is dead!");
-                    cin >> i;
-                    return i;
+                    i=my_getch();
+                    cout << endl;
+                    if(i==1){
+                        return 1;
+                    }else{
+                        return 2;
+                    }
                 }
                 displayall(info);
                 
@@ -180,8 +190,13 @@ int Gameplay::create_game(){
                         // info store the information of using potion
                         if(pc->getHp()==0){
                             displayall("PC is dead!");
-                            cin >> i;
-                            return i;
+                            i=my_getch();
+                            cout << endl;
+                            if(i==1){
+                                return 1;
+                            }else{
+                                return 2;
+                            }
                         }
                     
                         if(mode){
@@ -191,8 +206,13 @@ int Gameplay::create_game(){
                         info += v[curr]->attackplayer(is_hostile); // enemys around attack player
                         if(pc->getHp()==0){
                             displayall("PC is dead!");
-                            cin >> i;
-                            return i;
+                            i=my_getch();
+                            cout << endl;
+                            if(i==1){
+                                return 1;
+                            }else{
+                                return 2;
+                            }
                         }
                         displayall(info);
                         break;
@@ -225,8 +245,13 @@ int Gameplay::create_game(){
                         info += v[curr]->attackplayer(is_hostile);
                         if(pc->getHp()==0){
                             displayall("PC is dead!");
-                            cin >> i;
-                            return i;
+                            i=my_getch();
+                            cout << endl;
+                            if(i==1){
+                                return 1;
+                            }else{
+                                return 2;
+                            }
                         }
                         
                         if(mode){

@@ -38,3 +38,8 @@ int main(int argc, const char * argv[]) {
         std::cerr << "Invalid number of arguments!" <<endl;
     }
 }
+
+//    Character* pc = new Vampire();
+//    Floor a(pc);
+//    a.DisplayMap();
+//}

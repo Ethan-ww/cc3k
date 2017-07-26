@@ -40,6 +40,8 @@ string Dragon::attack(Character *pc){
     
 }
 
-Dragon::~Dragon(){}
+Dragon::~Dragon(){
+    //cout << "Dragon is released" << endl;
+}
 
 
